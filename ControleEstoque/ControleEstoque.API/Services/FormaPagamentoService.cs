@@ -14,7 +14,6 @@ namespace ControleEstoque.API.Services
             _context = context;
 
         }
-
         public async Task<IEnumerable<FormaPagamentoDto>> ObterTodosAsync() //
         {
             return await _context.FormasPagamento
@@ -36,7 +35,8 @@ namespace ControleEstoque.API.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(fp => fp.Id == id);
 
-            if (formaPagamento == null) return null;
+            if (formaPagamento == null) 
+                return null;
 
             return new FormaPagamentoDto
             {
@@ -53,9 +53,7 @@ namespace ControleEstoque.API.Services
                 }).ToList()
             };
 
-
         }
-
         public async Task<FormaPagamentoDto> CriarAsync(CriarFormaPagamentoDto dto)
         {
             var formaPagamento = new FormaPagamento
@@ -64,7 +62,8 @@ namespace ControleEstoque.API.Services
                 Ativo = dto.Ativo
             };
 
-            _context.FormasPagamento.Add(formaPagamento);
+            _context.FormasPagamento.
+                Add(formaPagamento);
             await _context.SaveChangesAsync();
 
             return new FormaPagamentoDto
@@ -77,32 +76,33 @@ namespace ControleEstoque.API.Services
 
         public async Task AtualizarAsync(AtualizarFormaPagamentoDto dto)
         {
-            var formaPagamento = await _context.FormasPagamento.FindAsync(dto.Id);
+            var formaPagamento = await _context.FormasPagamento.
+                FindAsync(dto.Id);
             if (formaPagamento != null)
             {
-                var formaPagamentoExiste = await _context.FormasPagamento.AnyAsync(fp => fp.Id == dto.Id);
+                var formaPagamentoExiste = await _context.FormasPagamento.
+                    AnyAsync(fp => fp.Id == dto.Id);
                 if (!formaPagamentoExiste)
                 {
-                    throw new ArgumentException("A forma de pagamento informada não existe.");
+                    throw new ArgumentException("Essa forma de pagamento não existe");
                 }
 
                 formaPagamento.Descricao = dto.Descricao;
                 formaPagamento.Ativo = dto.Ativo;
 
-
-
-                _context.FormasPagamento.Update(formaPagamento);
+                _context.FormasPagamento.
+                    Update(formaPagamento);
                 await _context.SaveChangesAsync();
             }
         }
-
-
-
         public async Task RemoverAsync(int id)
         {
-            var formaPagamento = await _context.FormasPagamento.FindAsync(id);
-            if (formaPagamento == null) return;
-            _context.FormasPagamento.Remove(formaPagamento);
+            var formaPagamento = await _context.FormasPagamento.
+                FindAsync(id);
+            if (formaPagamento == null) 
+                return;
+            _context.FormasPagamento.
+                Remove(formaPagamento);
             await _context.SaveChangesAsync();
         }
 

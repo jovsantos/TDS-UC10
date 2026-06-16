@@ -6,7 +6,6 @@ using System.Security.Claims;
 
 namespace ControleEstoque.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -21,22 +20,27 @@ namespace ControleEstoque.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> ObterTodosAsync()
         {
-            var formasPagamento = await _formaPagamentoService.ObterTodosAsync();
+            var formasPagamento = await _formaPagamentoService.
+                ObterTodosAsync();
             return Ok(formasPagamento);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var formaPagamento = await _formaPagamentoService.ObterPorIdAsync(id);
-            if (formaPagamento == null) return NotFound();
-
-            if (User.FindFirst(ClaimTypes.Role)?.Value == "Gerente") // serve
+            var formaPagamento = await _formaPagamentoService.
+                ObterPorIdAsync(id);
+            if (formaPagamento == null) 
+                return NotFound();
+            if (User.FindFirst(ClaimTypes.Role)?.Value == "Gerente") 
             {
-                var pedidos = await _formaPagamentoService.ObterPorIdAsync(id);
-                if (pedidos == null) return NotFound();
+                var pedidos = await _formaPagamentoService
+                    .ObterPorIdAsync(id);
+                if (pedidos == null) 
+                    
+                    return NotFound();
 
             }
 
@@ -55,10 +59,12 @@ namespace ControleEstoque.API.Controllers
         [Authorize(Roles = "Gerente")]
         public async Task<IActionResult> Atualizar(int id, [FromBody] AtualizarFormaPagamentoDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID da URL não corresponde ao ID do corpo.");
+            if (id != dto.Id) return BadRequest("ID não correspondente");
 
-            await _formaPagamentoService.AtualizarAsync(dto);
+            await _formaPagamentoService.
+                AtualizarAsync(dto);
             return NoContent();
+
         }
 
         [HttpDelete("{id}")]
